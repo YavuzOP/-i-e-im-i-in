@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mesaj ve Butonlar</title>
+    <style>
+        body {
+            background-color: #000;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            margin: 0;
+            position: relative;
+            overflow: hidden;
+            background-image: url('https://i.pinimg.com/736x/d9/ef/9a/d9ef9a644236945ac0594d908e104cd3.jpg'); /* Arka plan resmi */
+            background-size: cover; /* Arka plan resminin tüm ekranı kaplaması */
+            background-position: center;
+        }
+        .message-box {
+            background: linear-gradient(to right, #8a2be2, #4b0082);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.5em;
+            animation: zoomIn 2s ease-in-out;
+        }
+        @keyframes zoomIn {
+            0% {
+                transform: scale(0);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        .button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: transform 0.3s, background-color 0.3s;
+        }
+        .button-green {
+            background-color: #00ff00;
+            color: black;
+        }
+        .button-red {
+            background-color: #ff0000;
+            color: black;
+            position: relative;
+            transition: left 0.5s ease-in-out, top 0.5s ease-in-out;
+        }
+        .button-green:hover {
+            transform: scale(1.1);
+            background-color: #32cd32;
+        }
+        .button-red:hover {
+            transform: scale(1.1);
+            background-color: #ff6347;
+        }
+        .heart {
+            position: absolute;
+            font-size: 3em; /* Büyük kalp boyutu */
+            color: red;
+            opacity: 0;
+            animation: heartAnimation 8s linear infinite;
+        }
+        @keyframes heartAnimation {
+            0% {
+                opacity: 0;
+                transform: translate(-50vw, -50vh) scale(0.1);
+            }
+            10% {
+                opacity: 1;
+                transform: translate(calc(var(--tx) * 1vw), calc(var(--ty) * 1vh)) scale(0.3);
+            }
+            50% {
+                opacity: 1;
+                transform: translate(calc(var(--tx) * 1vw), calc(var(--ty) * 1vh)) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(calc(var(--tx) * 1vw), calc(var(--ty) * 1vh)) scale(0.1);
+            }
+        }
+        .sakura-petal {
+            position: absolute;
+            color: #ff69b4; /* Sakura rengi */
+            opacity: 0;
+            font-size: 2em;
+            transform: scale(0.1);
+            animation: sakuraFall 8s linear infinite;
+        }
+        @keyframes sakuraFall {
+            0% {
+                opacity: 0;
+                transform: translate(-50vw, -50vh) scale(0.1);
+            }
+            10% {
+                opacity: 1;
+                transform: translate(calc(var(--tx) * 1vw), calc(var(--ty) * 1vh)) scale(0.3);
+            }
+            50% {
+                opacity: 1;
+                transform: translate(calc(var(--tx) * 1vw), calc(var(--ty) * 1vh)) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(calc(var(--tx) * 1vw), calc(var(--ty) * 1vh)) scale(0.1);
+            }
+        }
+        .miku {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            z-index: -1; /* Arka planda olacak */
+        }
+    </style>
+</head>
+<body>
+    <div class="message-box">
+        Hayatımın anlamı beni affeder misin
+    </div>
+    <div class="buttons">
+        <button class="button button-green" id="greenButton">evet affederim cicegim</button>
+        <button class="button button-red" id="redButton">hayır affetmem</button>
+    </div>
+
+    <!-- Hatsune Miku resmi -->
+    <div class="miku">
+        
+    </div>
+
+    <script>
+        const redButton = document.getElementById('redButton');
+        const greenButton = document.getElementById('greenButton');
+        const messageBox = document.querySelector('.message-box');
+
+        redButton.addEventListener('mouseover', () => {
+            const x = Math.random() * (window.innerWidth - redButton.offsetWidth);
+            const y = Math.random() * (window.innerHeight - redButton.offsetHeight);
+
+            redButton.style.position = 'absolute';
+            redButton.style.left = `${x}px`;
+            redButton.style.top = `${y}px`;
+        });
+
+        greenButton.addEventListener('click', () => {
+            // Kırmızı butonu kaldıralım
+            redButton.style.display = 'none';
+
+            // Mesajı animasyonlu olarak güncelleyelim
+            const messageText = 'seni çok seviyorum çiçeğim benim';
+            messageBox.innerHTML = ''; // Önce içeriği temizleyelim
+
+            // Her harf için span elementi oluşturalım ve mesaj kutusuna ekleyelim
+            for (let i = 0; i < messageText.length; i++) {
+                const span = document.createElement('span');
+                span.innerText = messageText[i]; // innerText kullanılmalı
+                span.style.animation = `fadeIn 1s ${i * 0.5}s forwards`; // Harflerin gecikmeli olarak görünmesi için animasyon gecikmesi ekleyelim
+                messageBox.appendChild(span);
+            }
+
+            // Yeşil butonun yazısını güncelleyelim
+            greenButton.textContent = 'iyikivarsınkedisim';
+            
+            // Kalp ve sakura animasyonlarını başlat
+            setInterval(createSakuraPetal, 5); // Her 0.5 saniyede bir sakura yaprağı ekle
+            setInterval(createHeart, 5); // Her 0.8 saniyede bir kalp ekle
+        });
+
+        // Sakura yapraklarının ekranda kalma süresi bitmeye yakın olduğunda solgunlaşıp kaybolması
+        function createSakuraPetal() {
+            const sakuraPetal = document.createElement('div');
+            sakuraPetal.className = 'sakura-petal';
+            sakuraPetal.textContent = '🌸'; // Sakura emoji
+            document.body.appendChild(sakuraPetal);
+
+            const x = Math.random() * window.innerWidth;
+            const y = Math.random() * window.innerHeight;
+
+            sakuraPetal.style.left = `${x}px`;
+            sakuraPetal.style.top = `${y}px`;
+
+            sakuraPetal.style.setProperty('--tx', Math.random() * 100 - 50);
+            sakuraPetal.style.setProperty('--ty', Math.random() * 100 - 50);
+
+            setTimeout(() => {
+                sakuraPetal.style.opacity = '0';
+                sakuraPetal.style.transform = 'scale(0.1)';
+                setTimeout(() => {
+                    document.body.removeChild(sakuraPetal);
+                }, 1000); // Yaprakların kaybolma süresini ayarlayabilirsiniz
+            }, 8000); // Yaprakların ekranda kalma süresini ayarlayabilirsiniz
+        }
+
+        // Kalplerin ekranda kalma süresi bitmeye yakın olduğunda solgunlaşıp kaybolması
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.textContent = '💖'; // Growing heart emoji
+            document.body.appendChild(heart);
+
+            const x = Math.random() * window.innerWidth;
+            const y = Math.random() * window.innerHeight;
+
+            heart.style.left = `${x}px`;
+            heart.style.top = `${y}px`;
+
+            heart.style.setProperty('--tx', Math.random() * 100 - 50);
+            heart.style.setProperty('--ty', Math.random() * 100 - 50);
+
+            setTimeout(() => {
+                heart.style.opacity = '0';
+                heart.style.transform = 'scale(0.1)';
+                setTimeout(() => {
+                    document.body.removeChild(heart);
+                }, 1000); // Kalplerin kaybolma süresini ayarlayabilirsiniz
+            }, 8000); // Kalplerin ekranda kalma süresini ayarlayabilirsiniz
+        }
+    </script>
+</body>
+</html>
